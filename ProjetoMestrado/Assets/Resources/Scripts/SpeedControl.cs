@@ -14,6 +14,8 @@ public class SpeedControl : MonoBehaviour
 
     float cos_theta=0, sin_theta=0;
 
+    float theta = -180;
+
     float xAtual, xAnterior, yAtual, yAnterior, anguloAtual, anguloAnterior=0 ;
     void Start()
     {
@@ -23,25 +25,31 @@ public class SpeedControl : MonoBehaviour
     // Update is called once per frame
     void Main()
     {
-        float v = FowardSpeed(); 
-        float theta = GetTheta();
+        float v = -1*FowardSpeed(); 
+        float omega = GetOmega();        
+        xAtual = xAnterior + (v *  cos_theta * deltaT);
+        yAtual = yAnterior + (v *  sin_theta * deltaT);
         cos_theta = Mathf.Cos(theta);
-        sin_theta = Mathf.Sin(theta);
-        xAtual = xAnterior + (v * deltaT * cos_theta);
-        yAtual = yAnterior + (v * deltaT * sin_theta);
-        anguloAtual = -theta *deltaT;
-        /*
-        Debug.Log("Theta: "+theta);
+        sin_theta = Mathf.Sin(theta);        
+        
+        Debug.Log("Theta: "+ theta);
         Debug.Log("CosTheta: "+cos_theta);
         Debug.Log("SinTheta: "+sin_theta);
         Debug.Log("V: "+v);
         Debug.Log("xAtual: "+xAtual);
-        Debug.Log("yAtual: "+yAtual);*/
+        Debug.Log("yAtual: "+yAtual);
+
         xAnterior = xAtual;
         yAnterior= yAtual;
-        anguloAnterior  = anguloAtual;
+        anguloAnterior = theta;
+
+
+        Debug.Log("anguloAnterior: " + (anguloAnterior * Mathf.Rad2Deg));
+        //movimentacao
         go.transform.position = new Vector3(xAtual, 0, yAtual);
-        go.transform.Rotate(0,anguloAnterior,0);
+        go.transform.Rotate(0,(-(omega*deltaT)*Mathf.Rad2Deg),0);
+
+        theta = anguloAnterior+ (omega * deltaT);
     }
 
     float FowardSpeed(){
@@ -50,8 +58,8 @@ public class SpeedControl : MonoBehaviour
         return speed;
     }
 
-    float GetTheta(){
-      float t = ((leftWheelSpeed*wheelRadius)-(rightWheelSpeed*wheelRadius))/bodyRadius;
+    float GetOmega(){
+      float t = ((leftWheelSpeed*wheelRadius)-(rightWheelSpeed*wheelRadius))/(2*bodyRadius);
 
         return t;
     }

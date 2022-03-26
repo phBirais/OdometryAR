@@ -7,7 +7,7 @@ public class UI_Controller : MonoBehaviour
 {
     public Text sliderRigthValue;
     public Text sliderLeftValue;
-    public Text distanceValueX, distanceValueY;
+    public Text distanceValueX, distanceValueY, distanceDiffValueY;
     public Slider rightSlider;
     public Slider leftSlider;
 
@@ -19,17 +19,22 @@ public class UI_Controller : MonoBehaviour
 
     // Start is called before the first frame update
 
+    VirtualBotController virtualrobotController;
     RobotController robotController;
     void Start()
     {
-        robotController = GameObject.Find("RobotBody").GetComponent<RobotController>();   
+        robotController = GameObject.Find("RobotBody").GetComponent<RobotController>();
+        virtualrobotController = GameObject.Find("VirtualRobot").GetComponent<VirtualBotController>();   
     }
 
     // Update is called once per frame
     void Update()
     {
-        distanceValueX.text = robotController.distance.ToString();
-        distanceValueY.text = robotController.distanceY.ToString();
+        var virtualBotDist = Mathf.Round(((float)(robotController.distance)) * 100.0f) * 0.01f;
+        var realBotDist = Mathf.Round(((float)(virtualrobotController.distance)) * 100.0f) * 0.01f;
+        distanceValueX.text = virtualBotDist.ToString();
+        distanceValueY.text = realBotDist.ToString();
+        distanceDiffValueY.text = (virtualBotDist - realBotDist).ToString();
     }
 
      public void RightSliderValueChanged(float newValue)

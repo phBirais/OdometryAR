@@ -17,7 +17,7 @@ public class RobotController : MonoBehaviour
     
     void Start()
     {
-        //uiController = GameObject.Find("UIManager").GetComponent<UI_Controller>();        
+        // uiController = GameObject.Find("UIManager").GetComponent<UI_Controller>();        
     }
 
     // Update is called once per frame
@@ -37,8 +37,8 @@ public class RobotController : MonoBehaviour
     distance = distanceX - 0.15;
     distanceY = distanceZ;
     //robotVelocity = uiController.rightSliderValue;
-    robotVelocity = 1;
-    robotBody.velocity = new Vector3(robotVelocity,0,0);
+    //robotVelocity = 1;
+    //robotBody.velocity = new Vector3(robotVelocity,0,0);
 
     //mudar angulo do robô
     //Quaternion deltaRotation = Quaternion.Euler((new Vector3(0, robotAngle, 0))* Time.deltaTime);

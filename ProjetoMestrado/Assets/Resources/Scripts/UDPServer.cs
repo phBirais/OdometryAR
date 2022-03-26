@@ -72,7 +72,7 @@ public class UDPServer : MonoBehaviour
     public void StartRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44444);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("start");
 
 
@@ -95,7 +95,7 @@ public class UDPServer : MonoBehaviour
     public void StopRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44444);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("stop");
 
         try

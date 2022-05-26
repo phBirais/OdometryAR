@@ -6,65 +6,52 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 public class UDPServer : MonoBehaviour
 {
     // Start is called before the first frame update
     //Client uses as receive udp client
     UdpClient receiver;
+
+    public int port = 44445;
+
+    Thread st;
+    UdpClient listener;
+    IPEndPoint groupEP;
     void Start()
     {
-        /*
-        receiver = new UdpClient(44445);
-        try
-        {
-            receiver.BeginReceive(new AsyncCallback(recv), null);
-        }
-        catch (Exception e)
-        {
-            //MessageBox.Show(e.ToString());
-            Debug.Log("error");
-        }*/
+        st = new Thread(StartListener);
+        st.Start();
+        Debug.Log("TESTE");
     }
 
     // Update is called once per frame
     void Update()
-    {
-        //ReceiveMessage();
-        /*
-        UdpClient udpClient = new UdpClient("192.168.18.37", 44444);
-        Byte[] sendBytes = Encoding.ASCII.GetBytes("Lstart");
-        try
-        {
-            udpClient.Send(sendBytes, sendBytes.Length);
-            Debug.Log("mandou");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-        Thread.Sleep(3000);*/
+    {    
 
     }
-    //CallBack
-    private void recv(IAsyncResult res)
-    {
-        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 44445);
-        byte[] received = receiver.EndReceive(res, ref RemoteIpEndPoint);
 
-        //Process codes
-
-        Debug.Log(Encoding.UTF8.GetString(received));
-        receiver.BeginReceive(new AsyncCallback(recv), null);
-    }
-    private async Task ReceiveMessage()
+    void StartListener()
     {
-        using (var udpClient = new UdpClient(44445))
+        //listen on port
+        listener = new UdpClient(port);
+
+        //Client's IP
+        groupEP = new IPEndPoint(IPAddress.Any, port);
+
+        while (true)
         {
-            while (true)
+            try
+            {               
+                byte[] bytes = listener.Receive(ref groupEP);
+                string returnData = Encoding.ASCII.GetString(bytes);
+                print(returnData);
+            }
+            catch (Exception e)
             {
-                var receivedResult = await udpClient.ReceiveAsync();
-                Debug.Log((Encoding.ASCII.GetString(receivedResult.Buffer)));
+                print("There is an error: " + e.Message);
+                st.Abort();
             }
         }
     }
@@ -72,9 +59,8 @@ public class UDPServer : MonoBehaviour
     public void StartRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.59"), port);
         byte[] bytes = Encoding.ASCII.GetBytes("start");
-
 
         try
         {
@@ -115,6 +101,15 @@ public class UDPServer : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        StopRobot();
+        listener.Dispose();
+        //listener.EndReceive(null,ref groupEP);
+        listener.Close();
+        st.Abort();
+        print("Closing client");
+    }
 
 
 

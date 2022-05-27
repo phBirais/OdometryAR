@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class UI_Controller : MonoBehaviour
 {
-    public Text sliderRigthValue;
-    public Text sliderLeftValue;
-    public Text distanceValueX, distanceValueY, distanceDiffValueY;
+    private Text sliderRigthValue;
+    private Text sliderLeftValue;
+    public Text distanceValueX, distanceValueY, distanceValueEncod, distanceDiffValueY;
     public Slider rightSlider;
     public Slider leftSlider;
 
@@ -21,6 +21,7 @@ public class UI_Controller : MonoBehaviour
 
     VirtualBotController virtualrobotController;
     RobotController robotController;
+    public UDPServer udpServer;
     void Start()
     {
         robotController = GameObject.Find("RobotBody").GetComponent<RobotController>();
@@ -34,7 +35,8 @@ public class UI_Controller : MonoBehaviour
         var realBotDist = Mathf.Round(((float)(virtualrobotController.distance)) * 100.0f) * 0.01f;
         distanceValueX.text = virtualBotDist.ToString();
         distanceValueY.text = realBotDist.ToString();
-        distanceDiffValueY.text = (virtualBotDist - realBotDist).ToString();
+        distanceValueEncod.text = udpServer.distance.ToString();
+        //distanceDiffValueY.text = (virtualBotDist - realBotDist).ToString();
     }
 
      public void RightSliderValueChanged(float newValue)

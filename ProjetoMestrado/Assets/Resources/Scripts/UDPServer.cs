@@ -1,29 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 
 public class UDPServer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    //Client uses as receive udp client
-    UdpClient receiver;
-
     public int port = 44445;
+
+    public float distance = 0;
+
+    float perimeter = 0.1068f; //10 cm
 
     Thread st;
     UdpClient listener;
     IPEndPoint groupEP;
     void Start()
     {
+        Debug.Log("TESTE");
         st = new Thread(StartListener);
         st.Start();
-        Debug.Log("TESTE");
     }
 
     // Update is called once per frame
@@ -47,13 +44,26 @@ public class UDPServer : MonoBehaviour
                 byte[] bytes = listener.Receive(ref groupEP);
                 string returnData = Encoding.ASCII.GetString(bytes);
                 print(returnData);
+                distance = GetDistance(returnData);
             }
             catch (Exception e)
             {
                 print("There is an error: " + e.Message);
-                st.Abort();
+                //st.Abort();
             }
         }
+    }
+    public float GetDistance(string msg)
+    {
+        string[] dadosRecebidos = msg.Split(',');
+        //Debug.Log("dados: " + dadosCadastro[0]);
+        float[] valoresDouble = Array.ConvertAll(dadosRecebidos, float.Parse);
+        //Debug.Log("vetor double: " + valoresDouble[2].ToString());
+
+        float pos = ((valoresDouble[2] / 438) * perimeter) + ((valoresDouble[1] / 438) * perimeter);
+        pos /= 2;
+
+        return pos;
     }
 
     public void StartRobot()

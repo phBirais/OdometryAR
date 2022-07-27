@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpeedControl : MonoBehaviour
 {
-    public float wheelRadius = 0.016f; //Raio da roda em metros
+    public float wheelRadius = 0.017f; //Raio da roda em metros
     public float bodyRadius = 0.05f; //Raio do corpo do robô em metros
     public float leftWheelSpeed = 0.0f;
     public float rightWheelSpeed = 0.0f;
@@ -14,12 +14,12 @@ public class SpeedControl : MonoBehaviour
 
     float cos_theta=0, sin_theta=0;
 
-    float theta = -180;
+    float theta = 0;
 
     float xAtual, xAnterior, yAtual, yAnterior, anguloAtual, anguloAnterior=0 ;
     void Start()
     {
-        InvokeRepeating("Main", 0.0f, deltaT);
+        InvokeRepeating("Main", 0.1f, deltaT);
     }
 
     // Update is called once per frame
@@ -32,12 +32,13 @@ public class SpeedControl : MonoBehaviour
         cos_theta = Mathf.Cos(theta);
         sin_theta = Mathf.Sin(theta);        
         
-        Debug.Log("Theta: "+ theta);
-        Debug.Log("CosTheta: "+cos_theta);
-        Debug.Log("SinTheta: "+sin_theta);
+        //Debug.Log("Theta: "+ theta);
+        //Debug.Log("CosTheta: "+cos_theta);
+        //Debug.Log("SinTheta: "+sin_theta);
         Debug.Log("V: "+v);
-        Debug.Log("xAtual: "+xAtual);
-        Debug.Log("yAtual: "+yAtual);
+        Debug.Log("Omega: "+omega);
+        //Debug.Log("xAtual: "+xAtual);
+        //Debug.Log("yAtual: "+yAtual);
 
         xAnterior = xAtual;
         yAnterior= yAtual;
@@ -45,11 +46,13 @@ public class SpeedControl : MonoBehaviour
 
 
         Debug.Log("anguloAnterior: " + (anguloAnterior * Mathf.Rad2Deg));
+
+
         //movimentacao
         go.transform.position = new Vector3(xAtual, 0, yAtual);
         go.transform.Rotate(0,(-(omega*deltaT)*Mathf.Rad2Deg),0);
 
-        theta = anguloAnterior+ (omega * deltaT);
+        theta = anguloAnterior + (omega * deltaT);
     }
 
     float FowardSpeed(){
@@ -62,5 +65,13 @@ public class SpeedControl : MonoBehaviour
       float t = ((leftWheelSpeed*wheelRadius)-(rightWheelSpeed*wheelRadius))/(2*bodyRadius);
 
         return t;
+    }
+
+    float rpm()
+    {
+        float rpm = (((9.55f) * rightWheelSpeed ) + ( leftWheelSpeed*9.55f));
+        rpm /= 2;
+
+        return rpm;
     }
 }

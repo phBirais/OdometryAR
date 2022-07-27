@@ -9,9 +9,9 @@ public class RobotController : MonoBehaviour
     public GameObject marker;
     public GameObject robot;
 
-    public float robotVelocity;
+    //public float robotVelocity;
     public Vector3 robotAngle;
-    public double distance, distanceY;
+    public double distanceX, distanceY;
 
     UI_Controller uiController;
     
@@ -25,26 +25,15 @@ public class RobotController : MonoBehaviour
     {
     
     Vector3 difference = (robot.transform.position - marker.transform.position);
-    float distanceX = Mathf.Abs(difference.x);
-    float distanceZ = Mathf.Abs(difference.z);
-    
-    //distance= Vector3.Distance (robot.transform.position, marker.transform.position);
-    //distance = Mathf.Round(distance * 100) / 100;
-    distanceX = Mathf.Round(distanceX * 100) / 100;
-    distanceZ = Mathf.Round(distanceZ * 100) / 100;
+        //print(difference.ToString());
+        float posX = difference.x; //Mathf.Abs(difference.x);
+        float posY = difference.z;//Mathf.Abs(difference.z);
 
-    //print(distanceX);
-    distance = distanceX - 0.15;
-    distanceY = distanceZ;
-    //robotVelocity = uiController.rightSliderValue;
-    //robotVelocity = 1;
-    //robotBody.velocity = new Vector3(robotVelocity,0,0);
+        //distance = Mathf.Round(distance * 100) / 100;
+        distanceX = posX;//Mathf.Round(posX * 100) / 100;
+        distanceY = posY;//Mathf.Round(posY * 100) / 100;
 
-    //mudar angulo do robô
-    //Quaternion deltaRotation = Quaternion.Euler((new Vector3(0, robotAngle, 0))* Time.deltaTime);
-    //robotAngle = new Vector3 (0, uiController.leftSliderValue, 0 );
-    //robot.transform.Rotate(robotAngle * Time.deltaTime);
-    //robotBody.MoveRotation(robotBody.rotation * deltaRotation);
+        distanceX = distanceX;
     
     }
 }

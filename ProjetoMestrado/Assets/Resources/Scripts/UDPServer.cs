@@ -11,14 +11,14 @@ public class UDPServer : MonoBehaviour
 
     public float distance = 0;
 
-    float perimeter = 0.1068f; //10 cm
+    float perimeter = 0.1036725f; //
 
     Thread st;
     UdpClient listener;
     IPEndPoint groupEP;
     void Start()
     {
-        Debug.Log("TESTE");
+        Debug.Log("Inicia Thread");
         st = new Thread(StartListener);
         st.Start();
     }
@@ -31,12 +31,10 @@ public class UDPServer : MonoBehaviour
 
     void StartListener()
     {
-        //listen on port
+        //Ouvindo na porta
         listener = new UdpClient(port);
-
         //Client's IP
         groupEP = new IPEndPoint(IPAddress.Any, port);
-
         while (true)
         {
             try
@@ -49,27 +47,29 @@ public class UDPServer : MonoBehaviour
             catch (Exception e)
             {
                 print("There is an error: " + e.Message);
-                //st.Abort();
             }
         }
     }
     public float GetDistance(string msg)
     {
+        //recebe os dados por string e separa por vírgula;
         string[] dadosRecebidos = msg.Split(',');
-        //Debug.Log("dados: " + dadosCadastro[0]);
+        //Converte os dados recebidos para float;
         float[] valoresDouble = Array.ConvertAll(dadosRecebidos, float.Parse);
-        //Debug.Log("vetor double: " + valoresDouble[2].ToString());
 
-        float pos = ((valoresDouble[2] / 438) * perimeter) + ((valoresDouble[1] / 438) * perimeter);
-        pos /= 2;
+        //calcula a distancia percorrida
+        float dist  = ((valoresDouble[2] / 440) * perimeter) + ((valoresDouble[1] / 440) * perimeter);
 
-        return pos;
+        //Calcula a média da distância
+        dist /= 2;
+
+        return dist;
     }
 
     public void StartRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.59"), port);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
         byte[] bytes = Encoding.ASCII.GetBytes("start");
 
         try
@@ -100,6 +100,29 @@ public class UDPServer : MonoBehaviour
             Client.Send(bytes, bytes.Length, ip);
 
             Debug.Log("mandouStop");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+        finally
+        {
+            Client.Close();
+        }
+    }
+
+    public void PauseRobot()
+    {
+        UdpClient Client = new UdpClient();
+        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
+        byte[] bytes = Encoding.ASCII.GetBytes("pause");
+
+        try
+        {
+            //Debug.Log("mandandoStop");
+            Client.Send(bytes, bytes.Length, ip);
+
+            Debug.Log("mandouPause");
         }
         catch (Exception e)
         {

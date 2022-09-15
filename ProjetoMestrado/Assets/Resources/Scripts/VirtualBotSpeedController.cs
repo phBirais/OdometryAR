@@ -74,8 +74,9 @@ public class VirtualBotSpeedController : MonoBehaviour
         //Debug.Log("CosTheta: " + cos_theta);
         //Debug.Log("SinTheta: " + sin_theta);
         //Debug.Log("V: " + v);
-        Debug.Log("xAtual: " + xAtual);
-        Debug.Log("yAtual: " + yAtual);
+        
+        //Debug.Log("xAtual: " + xAtual);
+        //Debug.Log("yAtual: " + yAtual);
 
         xAnterior = xAtual;
         yAnterior = yAtual;

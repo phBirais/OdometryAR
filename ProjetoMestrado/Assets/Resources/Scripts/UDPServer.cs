@@ -11,7 +11,9 @@ public class UDPServer : MonoBehaviour
 
     public float distance = 0;
 
-    float perimeter = 0.1036725f; //
+    public VirtualBotSpeedController virtualBotSpeedController;
+
+    float perimeter = 0.1036725f; //meters//
 
     Thread st;
     UdpClient listener;
@@ -19,6 +21,7 @@ public class UDPServer : MonoBehaviour
     void Start()
     {
         Debug.Log("Inicia Thread");
+        virtualBotSpeedController = GameObject.Find("VirtualRobot").GetComponent<VirtualBotSpeedController>();  
         st = new Thread(StartListener);
         st.Start();
     }
@@ -41,7 +44,7 @@ public class UDPServer : MonoBehaviour
             {               
                 byte[] bytes = listener.Receive(ref groupEP);
                 string returnData = Encoding.ASCII.GetString(bytes);
-                print(returnData);
+                //print(returnData);
                 distance = GetDistance(returnData);
             }
             catch (Exception e)
@@ -68,15 +71,25 @@ public class UDPServer : MonoBehaviour
 
     public void StartRobot()
     {
+        //float leftSpeed = virtualBotSpeedController.leftWheelSpeed;
+        //float rightSpeed = virtualBotSpeedController.rightWheelSpeed;
+
+        int leftSpeed = 130;
+        int rightSpeed = 130;
+
+        //tranformar velocidade em pwm
+        //mandar as velocidade para os robos em pwm ou porcentagem
+
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
-        byte[] bytes = Encoding.ASCII.GetBytes("start");
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port); //IP do esp32
+        //IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
+        byte[] bytes = Encoding.ASCII.GetBytes("start,"+leftSpeed+","+rightSpeed);
 
         try
         {
             Client.Send(bytes, bytes.Length, ip);
 
-            Debug.Log("mandou");
+            Debug.Log("mandouStart");
         }
         catch (Exception e)
         {
@@ -91,7 +104,8 @@ public class UDPServer : MonoBehaviour
     public void StopRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
+       // IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("stop");
 
         try
@@ -114,7 +128,8 @@ public class UDPServer : MonoBehaviour
     public void PauseRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
+       // IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("pause");
 
         try

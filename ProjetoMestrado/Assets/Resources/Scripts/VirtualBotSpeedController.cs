@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VirtualBotSpeedController : MonoBehaviour
 {
@@ -11,16 +12,22 @@ public class VirtualBotSpeedController : MonoBehaviour
     public GameObject go;
     public GameObject baseMarker;
 
+    public InputField leftSpeedInput;
+    public InputField rightSpeedInput;
+
     public float deltaT = 1f; //passo da operação
 
     float cos_theta = 0, sin_theta = 0;
 
-    float theta = 0;
+    public float theta = 0;
 
     float xAtual, xAnterior = -0.15f, yAtual, yAnterior, anguloAtual, anguloAnterior = 0;
 
+    Quaternion rotacaoInicial = Quaternion.identity;
 
+    //variaveis publicas
     public double posX, posY;
+    public float forwardSpeed;
 
     void Start()
     {
@@ -29,6 +36,20 @@ public class VirtualBotSpeedController : MonoBehaviour
     }
     public void StartRobot()
     {
+        rotacaoInicial = go.transform.rotation;
+        if (int.TryParse(leftSpeedInput.text, out int result))
+        {
+            rightWheelSpeed = result;
+        }
+
+        if (int.TryParse(rightSpeedInput.text, out int result2))
+        {
+            leftWheelSpeed = result2;
+        }
+
+        leftWheelSpeed = ((float)(leftWheelSpeed / 9.5492965964254));
+        rightWheelSpeed = ((float)(rightWheelSpeed / 9.5492965964254));
+
         InvokeRepeating("Main", 0.1f, deltaT);
     }
 
@@ -40,9 +61,15 @@ public class VirtualBotSpeedController : MonoBehaviour
     public void ResetRobot()
     {
         go.transform.position = new Vector3(-0.15f, 0, 0);
-        go.transform.Rotate(0, 180, 0);
+        go.transform.rotation = rotacaoInicial;
+        //go.transform.Rotate(0, -90, 0);
         xAnterior = -0.15f;
         yAnterior = 0;
+        xAtual = 0;
+        yAtual = 0;
+        cos_theta = 0;
+        sin_theta = 0;
+        theta = 0;
         anguloAnterior = 0;
     }
 
@@ -63,6 +90,9 @@ public class VirtualBotSpeedController : MonoBehaviour
     // Update is called once per frame
     void Main()
     {
+        //Debug.Log("xAtual: " + leftWheelSpeed);
+        //Debug.Log("yAtual: " + rightWheelSpeed);
+
         float v = -1 * FowardSpeed();
         float omega = GetOmega();
         xAtual = xAnterior + (v * cos_theta * deltaT);
@@ -89,10 +119,11 @@ public class VirtualBotSpeedController : MonoBehaviour
         go.transform.Rotate(0, (-(omega * deltaT) * Mathf.Rad2Deg), 0);
 
         theta = anguloAnterior + (omega * deltaT);
+        forwardSpeed=v;
     }
 
     float FowardSpeed()
-    {
+    {    
         float speed = 0;
         speed = ((leftWheelSpeed * wheelRadius) / 2) + ((rightWheelSpeed * wheelRadius) / 2);
         return speed;

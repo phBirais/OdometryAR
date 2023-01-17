@@ -32,8 +32,6 @@ public class RobotController : MonoBehaviour
         //distance = Mathf.Round(distance * 100) / 100;
         distanceX = posX;//Mathf.Round(posX * 100) / 100;
         distanceY = posY;//Mathf.Round(posY * 100) / 100;
-
-        distanceX = distanceX;
     
     }
 }

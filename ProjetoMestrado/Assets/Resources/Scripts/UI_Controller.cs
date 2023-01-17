@@ -20,7 +20,7 @@ public class UI_Controller : MonoBehaviour
 
     // Start is called before the first frame update
 
-    public VirtualBotSpeedController virtualrobotController;
+    public VirtualBotSpeedController virtualBotSpeedController;
     public RobotController robotController;
     public UDPServer udpServer;
     void Start()
@@ -32,9 +32,9 @@ public class UI_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var virtualBotDistX = virtualrobotController.posX + 0.15;
-        var virtualBotDistY = virtualrobotController.posY;
-        var realBotDistX = robotController.distanceX + 0.15;
+        var virtualBotDistX = virtualBotSpeedController.posX + 0.15;
+        var virtualBotDistY = virtualBotSpeedController.posY;
+        var realBotDistX = robotController.distanceX+0.15;
         var realBotDistY = robotController.distanceY;
         realdistanceValueX.text = realBotDistX.ToString("F3");
         realdistanceValueY.text = realBotDistY.ToString("F3");

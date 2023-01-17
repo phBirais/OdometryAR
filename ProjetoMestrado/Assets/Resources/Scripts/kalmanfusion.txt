@@ -1,0 +1,24 @@
+Algoritmo Filtro de Kalman como fusão sensorial
+
+
+Begin 
+	
+	receber matriz A;
+	receber matriz H;
+	Q=[1 0 0; 0 1 0; 0 0 1];
+	R= [1 0 0; 0 1 0; 0 0 1];
+	receber estado estimado kalman anterior Ekant= Ek;
+	receber covariancia estado estimado pelo kalman anterior Pkant= Pk;
+	receber estado Eodom= x,y,teta da odometria ;
+	receber estado medido camera Ecam= x, y, teta da camera; //estado que vem do tracking vuforia
+	//inicio do Kalman predict state
+	Eprior= Eodom//estado estimado a priori// aqui a gente usa a odometria como predição de estado
+	Pkprior= A*Pkant*transposta(A) + Q //covariancia do estado a priori
+	//update
+	yk= Ecam- H*Eprior; //estado de inovação
+	S=H*Pkprior*trasposta(H)+R; 
+	Kk= Pkprior*HT*inversa(S)// ganho Kalman
+	Ek= Ekant+ K*yk;
+	Pk = (I-Kk*H)*Pkprior; 
+      return (Ek, Pk);
+end

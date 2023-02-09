@@ -59,9 +59,9 @@ public class CsvWriter : MonoBehaviour
         virtualBotTw.WriteLine((Time.time - virtualBotFirstTime).ToString("F3") + ";" + (virtualrobotController.posX + 0.15).ToString("F3") + ";" + virtualrobotController.posY.ToString("F3")
             + ";" + virtualBot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + virtualrobotController.forwardSpeed.ToString("F3"));
 
-        if (udpServer.realBotValues.Length > 0) { 
-        realBotTw.WriteLine((udpServer.realBotValues[0] - virtualBotFirstTime).ToString("F3") + ";" + (robotController.distanceX + 0.15).ToString("F3") + ";" + robotController.distanceY.ToString("F3")
-           + ";" + robotController.robot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + virtualrobotController.forwardSpeed.ToString("F3"));
+        if (udpServer.realBotValues.Length > 0) {
+        realBotTw.WriteLine((udpServer.realBotValues[0] -realBotFirstTime).ToString("F3") + ";" + (robotController.distanceX + 0.15).ToString("F3") + ";" + robotController.distanceY.ToString("F3")
+           + ";" + robotController.robot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + udpServer.realBotValues[1] + ";"+ udpServer.realBotValues[2]);
         }
 
         virtualBotTw.Close();

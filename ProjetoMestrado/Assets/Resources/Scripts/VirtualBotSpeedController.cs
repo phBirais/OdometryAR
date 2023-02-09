@@ -29,10 +29,13 @@ public class VirtualBotSpeedController : MonoBehaviour
     public double posX, posY;
     public float forwardSpeed;
 
+    float distanceX = 0;
+    float distanceZ = 0;
+
     void Start()
     {
-         go.transform.position =  new Vector3(-0.15f, 0, 0);
-         xAtual = go.transform.position.x;
+        go.transform.position =  new Vector3(-0.15f, 0, 0);
+         xAtual = go.transform.position.x;       
     }
     public void StartRobot()
     {
@@ -75,9 +78,12 @@ public class VirtualBotSpeedController : MonoBehaviour
 
     void Update()
     {
-        Vector3 difference = (go.transform.position - baseMarker.transform.position);
-        float distanceX =difference.x;
-        float distanceZ = difference.z;
+        if (go && baseMarker)
+        {
+            Vector3 difference = (go.transform.position - baseMarker.transform.position);
+            distanceX = difference.x;
+            distanceZ = difference.z;
+        }
 
         //distanceX = Mathf.Round(distanceX * 100) / 100;
         //distanceZ = Mathf.Round(distanceZ * 100) / 100;

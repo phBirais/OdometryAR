@@ -42,7 +42,7 @@ public class KalmanFusion : MonoBehaviour
 
     void Update()
     {
-        
+        //Debug.Log(qMatrix*rMatrix);
     }
 
     public void KallmanFusion()

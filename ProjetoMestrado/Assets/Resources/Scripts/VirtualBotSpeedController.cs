@@ -26,7 +26,7 @@ public class VirtualBotSpeedController : MonoBehaviour
     Quaternion rotacaoInicial = Quaternion.identity;
 
     //variaveis publicas
-    public double posX, posY;
+    public double posX, posY, angleRadians;
     public float forwardSpeed;
 
     float distanceX = 0;
@@ -125,7 +125,7 @@ public class VirtualBotSpeedController : MonoBehaviour
         go.transform.Rotate(0, (-(omega * deltaT) * Mathf.Rad2Deg), 0);
 
         theta = anguloAnterior + (omega * deltaT);
-        forwardSpeed=v;
+        forwardSpeed =v;
     }
 
     float FowardSpeed()

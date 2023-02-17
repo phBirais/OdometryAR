@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
 
 public class CsvWriter : MonoBehaviour
 {
@@ -10,19 +12,21 @@ public class CsvWriter : MonoBehaviour
     public VirtualBotSpeedController virtualrobotController;
     public RobotController robotController;
     public UDPServer udpServer;
+    public KalmanFusion kalmanFusion;
     public GameObject virtualBot;
 
     //tempo de start
     float virtualBotFirstTime = 0, realBotFirstTime = 0;
 
-    string virtualBotFileName = "", realBotFileName = "";
+    string virtualBotFileName = "", realBotFileName = "", kalmanBotFileName = "";
 
-    StreamWriter virtualBotTw, realBotTw;
+    StreamWriter virtualBotTw, realBotTw, kalmanBotTw;
     void Start()
     {
         //criação do arquivo para dados do robô virtual e real
         virtualBotFileName = Application.dataPath + "/virtualBotData.csv";
         realBotFileName = Application.dataPath + "/realBotData.csv";
+        kalmanBotFileName = Application.dataPath + "/kalmanBotData.csv";
 
         virtualBotTw = new StreamWriter(virtualBotFileName, false);
         virtualBotTw.WriteLine("Time; Xposition; Yposition; Angle; Speed");
@@ -31,6 +35,10 @@ public class CsvWriter : MonoBehaviour
         realBotTw = new StreamWriter(realBotFileName, false);
         realBotTw.WriteLine("Time; Xposition; Yposition; Angle; RightEncoder; LeftEncoder");
         realBotTw.Close();
+
+        kalmanBotTw = new StreamWriter(kalmanBotFileName, false);
+        kalmanBotTw.WriteLine("Time; EkX; EodomX; EcamX; Ykx");
+        kalmanBotTw.Close();
 
 
         print("Gravação csv iniciada");
@@ -54,6 +62,7 @@ public class CsvWriter : MonoBehaviour
         //print("entrou");
         virtualBotTw = new StreamWriter(virtualBotFileName, true, Encoding.UTF8);
         realBotTw = new StreamWriter(realBotFileName, true, Encoding.UTF8);
+        kalmanBotTw = new StreamWriter(kalmanBotFileName, true, Encoding.UTF8);
 
 
         virtualBotTw.WriteLine((Time.time - virtualBotFirstTime).ToString("F3") + ";" + (virtualrobotController.posX + 0.15).ToString("F3") + ";" + virtualrobotController.posY.ToString("F3")
@@ -64,7 +73,10 @@ public class CsvWriter : MonoBehaviour
            + ";" + robotController.robot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + udpServer.realBotValues[1] + ";"+ udpServer.realBotValues[2]);
         }
 
+        kalmanBotTw.WriteLine(Time.time + ";" + (kalmanFusion.eK[0]).ToString("F3") + ";" + kalmanFusion.eOdon[0].ToString("F3") + ";" + kalmanFusion.eCam[0].ToString("F3") + ";" + kalmanFusion.yK[0].ToString("F3"));
+
         virtualBotTw.Close();
         realBotTw.Close();
+        kalmanBotTw.Close();
     }
 }

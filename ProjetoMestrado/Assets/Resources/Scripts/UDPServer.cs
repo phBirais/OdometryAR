@@ -100,7 +100,7 @@ public class UDPServer : MonoBehaviour
         }
 
         //tranformar velocidade em pwm
-        // RPM 0 - 400 --> PWM 0 - 1023
+        // RPM 0 - 475 --> PWM 0 - 1023
         leftSpeed = (leftSpeed * 1023 / 475);
         rightSpeed = (rightSpeed * 1023 / 475);
 

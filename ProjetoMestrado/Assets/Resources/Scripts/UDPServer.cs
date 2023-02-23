@@ -70,7 +70,7 @@ public class UDPServer : MonoBehaviour
         realBotValues = Array.ConvertAll(dadosRecebidos, float.Parse);
 
         //print(realBotValues[0]);
-        Debug.Log("valores: " + realBotValues[1]);
+        //Debug.Log("valores: " + realBotValues[1]);
 
         //calcula a distancia percorrida
         float dist  = ((realBotValues[2] / 440) * perimeter) + ((realBotValues[1] / 440) * perimeter);

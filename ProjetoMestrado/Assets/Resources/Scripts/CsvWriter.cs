@@ -13,10 +13,11 @@ public class CsvWriter : MonoBehaviour
     public RobotController robotController;
     public UDPServer udpServer;
     public KalmanFusion kalmanFusion;
+
     public GameObject virtualBot;
 
     //tempo de start
-    float virtualBotFirstTime = 0, realBotFirstTime = 0;
+    float virtualBotFirstTime = 0, realBotFirstTime = 0, kalmanBotFirstTime = 0;
 
     string virtualBotFileName = "", realBotFileName = "", kalmanBotFileName = "";
 
@@ -33,7 +34,7 @@ public class CsvWriter : MonoBehaviour
         virtualBotTw.Close();
 
         realBotTw = new StreamWriter(realBotFileName, false);
-        realBotTw.WriteLine("Time; Xposition; Yposition; Angle; RightEncoder; LeftEncoder");
+        realBotTw.WriteLine("HardwareTime; SoftwareTime; Xposition; Yposition; Angle; RightEncoder; LeftEncoder");
         realBotTw.Close();
 
         kalmanBotTw = new StreamWriter(kalmanBotFileName, false);
@@ -52,6 +53,7 @@ public class CsvWriter : MonoBehaviour
         }
         else {
             virtualBotFirstTime = Time.time;
+            kalmanBotFirstTime = Time.time;
             if(udpServer.realBotValues.Length > 0)
                 realBotFirstTime = udpServer.realBotValues[0];
         }
@@ -69,11 +71,11 @@ public class CsvWriter : MonoBehaviour
             + ";" + virtualBot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + virtualrobotController.forwardSpeed.ToString("F3"));
 
         if (udpServer.realBotValues.Length > 0) {
-        realBotTw.WriteLine((udpServer.realBotValues[0] -realBotFirstTime).ToString("F3") + ";" + (robotController.distanceX + 0.15).ToString("F3") + ";" + robotController.distanceY.ToString("F3")
+        realBotTw.WriteLine((udpServer.realBotValues[0] -realBotFirstTime).ToString("F3") +";" + (Time.time - kalmanBotFirstTime) + ";" + (robotController.distanceX + 0.15).ToString("F3") + ";" + robotController.distanceY.ToString("F3")
            + ";" + robotController.robot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + udpServer.realBotValues[1] + ";"+ udpServer.realBotValues[2]);
         }
 
-        kalmanBotTw.WriteLine(Time.time + ";" + (kalmanFusion.eK[0]).ToString("F3") + ";" + kalmanFusion.eOdon[0].ToString("F3") + ";" + kalmanFusion.eCam[0].ToString("F3") + ";" + kalmanFusion.yK[0].ToString("F3"));
+        kalmanBotTw.WriteLine((Time.time - kalmanBotFirstTime).ToString("F3")+ ";" + (kalmanFusion.eK[0]).ToString("F3") + ";" + kalmanFusion.eOdon[0].ToString("F3") + ";" + kalmanFusion.eCam[0].ToString("F3") + ";" + kalmanFusion.yK[0].ToString("F3"));
 
         virtualBotTw.Close();
         realBotTw.Close();

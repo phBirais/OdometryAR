@@ -30,12 +30,19 @@ public class UI_Controller : MonoBehaviour
 
     void Update()
     {
-        //
+        //robo virtrual
         var virtualBotDistX = virtualBotSpeedController.posX + 0.15;
         var virtualBotDistY = virtualBotSpeedController.posY;
 
+        //robo real
         var realBotDistX = robotController.distanceX+0.15;
         var realBotDistY = robotController.distanceY;
+
+
+        //robo filtro de kalman
+        var kalmanBotDistX = kalmanFusion.eK[0] + 0.15;
+        var kalmanBotDistY = kalmanFusion.eK[1];
+        
 
         //Incluindo valores nas caixas de texto
 
@@ -48,8 +55,8 @@ public class UI_Controller : MonoBehaviour
         virtualdistanceValueY.text = virtualBotDistY.ToString("F3");
 
         //valor ponto filtro de kalman
-        kalmandistanceValueX.text = "4321";
-        kalmandistanceValueY.text = "1234";
+        kalmandistanceValueX.text = kalmanBotDistX.ToString("F3");
+        kalmandistanceValueY.text = kalmanBotDistY.ToString("F3");
 
         //valor de distancia percorrida pelos encoders
         distanceValueEncod.text = udpServer.distance.ToString("F3");

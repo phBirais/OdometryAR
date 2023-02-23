@@ -35,7 +35,7 @@ public class VirtualBotSpeedController : MonoBehaviour
     void Start()
     {
         go.transform.position =  new Vector3(-0.15f, 0, 0);
-         xAtual = go.transform.position.x;       
+        xAtual = go.transform.position.x;       
     }
     public void StartRobot()
     {

@@ -1,1 +1,1 @@
-Time; Xposition; Yposition; Angle; RightEncoder; LeftEncoder
+HardwareTime; SoftwareTime; Xposition; Yposition; Angle; RightEncoder; LeftEncoder

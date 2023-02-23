@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class RobotController : MonoBehaviour
 {
-    public Rigidbody robotBody;
-
     public GameObject marker;
     public GameObject robot;
 
     //public float robotVelocity;
     public Vector3 robotAngle;
-    public double distanceX, distanceY;
-
-    UI_Controller uiController;
+    public double distanceX, distanceY, rotation;
     
     void Start()
     {
@@ -24,14 +20,17 @@ public class RobotController : MonoBehaviour
     void Update()
     {
     
-    Vector3 difference = (robot.transform.position - marker.transform.position);
-        //print(difference.ToString());
-        float posX = difference.x; //Mathf.Abs(difference.x);
-        float posY = difference.z;//Mathf.Abs(difference.z);
+    Vector3 positiondifference = (robot.transform.position - marker.transform.position);
+
+        float rotationDifference = (robot.transform.rotation.y - marker.transform.rotation.y);
+        float posX = positiondifference.x; //Mathf.Abs(difference.x);
+        float posY = positiondifference.z;//Mathf.Abs(difference.z);
 
         //distance = Mathf.Round(distance * 100) / 100;
         distanceX = posX;//Mathf.Round(posX * 100) / 100;
         distanceY = posY;//Mathf.Round(posY * 100) / 100;
-    
+        rotation = rotationDifference;
+
+
     }
 }

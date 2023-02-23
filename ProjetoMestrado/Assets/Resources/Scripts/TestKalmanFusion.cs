@@ -5,28 +5,21 @@ using UnityEngine.UI;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 
-public class KalmanFusion : MonoBehaviour
+public class TestKalmanFusion : MonoBehaviour
 {
-    public GameObject virtualBot;
-    public GameObject kalmanBot;
-    public GameObject eCamBot;
-    public GameObject realBot;
-
-    public RealBotOdometry realBotOdometry;
-
     public float deltaT = 0.1f; //passo da operação
 
     //Matriz H - matriz de observabilidade do sistema
 
     //estado estimado kalman anterior
-   public Vector<double> eKant = Vector<double>.Build.Dense(3, 0);
+    public Vector<double> eKant = Vector<double>.Build.Dense(3, 0);
 
-    double[] ekInicial = { 1.0, 1.0, 1.0}; //só para preencher o vetor
+    double[] ekInicial = { 1.0, 2.0, 3.0 }; //só para preencher o vetor
     public Vector<double> eK;
 
     //covariancia estado estimado pelo kalman anterior
-    Matrix<double> pKant = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0f);
-    Matrix<double> pK = Matrix<double>.Build.DenseDiagonal(3, 3, -0.025f);
+    Matrix<double> pKant = Matrix<double>.Build.DenseDiagonal(3, 3, 2.0);
+    Matrix<double> pK = Matrix<double>.Build.DenseDiagonal(3, 3, 0);
 
     // estado de inovação
     public Vector<double> yK = Vector<double>.Build.Dense(3, 0);
@@ -76,7 +69,7 @@ public class KalmanFusion : MonoBehaviour
         CancelInvoke();
     }
 
-    public void ResetKalman()
+    void Update()
     {
 
     }
@@ -87,65 +80,42 @@ public class KalmanFusion : MonoBehaviour
         eKant = eK;
         pKant = pK;
         //3)
-
-        //Utilizando dados robo real
+        eOdon[0] = eOdon[0] + 1.0;//X da odometria
+        eOdon[1] = eOdon[1] + 1.0; //y da odometria
+        eOdon[2] = eOdon[2] + 1.0;
         /*
-        eOdon[0] = realBotOdometry.odometryState[0];
-        eOdon[1] = realBotOdometry.odometryState[1];
-        eOdon[2] = realBotOdometry.odometryState[2];
-        */        
         eOdon[0] = virtualBot.transform.position.x;//X da odometria
-        eOdon[1] = virtualBot.transform.position.z; //y da odometria
+        eOdon[1] = virtualBot.transform.position.y; //y da odometria
         eOdon[2] = virtualBot.transform.eulerAngles.y * Mathf.Deg2Rad;//teta da odometria (em radianos)
-        
-        
+        */
         //4)
-        
-        eCam[0] = virtualBot.transform.position.x + 0.05; //x da camera
-        eCam[1] = virtualBot.transform.position.z; //y da camera
-        eCam[2] = virtualBot.transform.eulerAngles.y  * Mathf.Deg2Rad; //teta da camera (em radianos)
-        
-        
-         // utilizando dados do robo real
-         /*
-        eCam[0] = realBot.transform.position.x + 0.05; //x da camera
-        eCam[1] = realBot.transform.position.z + 0.05; ;//y da camera
-        eCam[2] = realBot.transform.eulerAngles.y +0.5;//* Mathf.Deg2Rad); //teta da camera (em radianos)
-         */
-         
+        eCam[0] = eCam[0] + 2.0f;  //x da camera
+        eCam[1] = eCam[1] + 2.0f; //y da camera
+        eCam[2] = eCam[2] + 2.0f; //teta da camera (em radianos)
         //5)
         ePrior = eOdon;
         //6)
         pkPrior = A * pKant * A.Transpose() + Q;
-        
+
         //7)
         yK = eCam - (H * ePrior);
-      
+
         //8)
         S = H * pkPrior * H.Transpose() + R;
-      
+
         //9)
         Kk = pkPrior * H.Transpose() + S.Inverse();
-       
+
         //10)
         eK = eOdon + (Kk * yK);
         //11)
         pK = (I - Kk * H) * pkPrior;
 
-        MoveRobot(eK, kalmanBot);
-        MoveRobot(eCam, eCamBot); 
-
-        Debug.Log("eCam = " + eCam);
+        //Debug.Log("eCam = " + eCam);
         //Debug.Log("eOdon = " + eOdon);
         //Debug.Log("yK = " + yK);
         //Debug.Log("Ek = " + eK);
-      
-    }
 
-    public void MoveRobot(Vector<double> state, GameObject go)
-    {
-        go.transform.position = new Vector3((float)state[0], 0, (float)state[1]);
-        go.transform.rotation = Quaternion.Euler(0, (float)state[2]*Mathf.Rad2Deg,0);
     }
 
     public void StopMatrixCalculation()
@@ -153,3 +123,4 @@ public class KalmanFusion : MonoBehaviour
         CancelInvoke();
     }
 }
+

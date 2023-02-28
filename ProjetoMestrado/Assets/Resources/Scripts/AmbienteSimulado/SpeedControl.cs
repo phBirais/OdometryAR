@@ -17,6 +17,9 @@ public class SpeedControl : MonoBehaviour
     float theta = 0;
 
     float xAtual, xAnterior, yAtual, yAnterior, anguloAtual, anguloAnterior=0 ;
+
+    public float forwardSpeed = 0, angularSpeed = 0;
+    public double posX, posY, angle;
     void Start()
     {
         InvokeRepeating("Main", 0.1f, deltaT);
@@ -35,24 +38,28 @@ public class SpeedControl : MonoBehaviour
         //Debug.Log("Theta: "+ theta);
         //Debug.Log("CosTheta: "+cos_theta);
         //Debug.Log("SinTheta: "+sin_theta);
-        Debug.Log("V: "+v);
-        Debug.Log("Omega: "+omega);
+        //Debug.Log("V: "+v);
+        //Debug.Log("Omega: "+omega);
         //Debug.Log("xAtual: "+xAtual);
         //Debug.Log("yAtual: "+yAtual);
 
         xAnterior = xAtual;
         yAnterior= yAtual;
-        anguloAnterior = theta;
-
-
-        Debug.Log("anguloAnterior: " + (anguloAnterior * Mathf.Rad2Deg));
-
+        anguloAnterior = theta;     
 
         //movimentacao
         go.transform.position = new Vector3(xAtual, 0, yAtual);
         go.transform.Rotate(0,(-(omega*deltaT)*Mathf.Rad2Deg),0);
 
         theta = anguloAnterior + (omega * deltaT);
+
+        forwardSpeed = v;
+        angularSpeed = omega;
+        //informações
+        posX = xAtual;
+        posY = yAtual;
+        angle = theta*Mathf.Rad2Deg;
+
     }
 
     float FowardSpeed(){

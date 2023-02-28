@@ -49,7 +49,7 @@ public class CsvWriter : MonoBehaviour
     {
         if(udpServer.gameStatus == true)
         {
-            WriteCSV();
+            WriteCSV();            
         }
         else {
             virtualBotFirstTime = Time.time;

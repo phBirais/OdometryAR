@@ -28,6 +28,7 @@ public class VirtualBotSpeedController : MonoBehaviour
     //variaveis publicas
     public double posX, posY, angleRadians;
     public float forwardSpeed;
+    public float angularSpeed;
 
     float distanceX = 0;
     float distanceZ = 0;
@@ -126,6 +127,7 @@ public class VirtualBotSpeedController : MonoBehaviour
 
         theta = anguloAnterior + (omega * deltaT);
         forwardSpeed =v;
+        angularSpeed =omega;
     }
 
     float FowardSpeed()

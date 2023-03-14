@@ -26,13 +26,13 @@ public class SimulatedKalman : MonoBehaviour
 
     //covariancia estado estimado pelo kalman anterior
     Matrix<double> pKant = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0f);
-    Matrix<double> pK = Matrix<double>.Build.DenseDiagonal(3, 3, 0.25f);
+    public Matrix<double> pK = Matrix<double>.Build.DenseDiagonal(3, 3, 0.25f);
 
     // estado de inovação
     public Vector<double> yK = Vector<double>.Build.Dense(3, 0);
 
     //ganho de kalman
-    Matrix<double> Kk = Matrix<double>.Build.DenseDiagonal(3, 3, 0);
+    public Matrix<double> Kn = Matrix<double>.Build.DenseDiagonal(3, 3, 0);
 
     //estado odometria x,y,teta da odometria; x, y e angulo
     //colocar a odometria do virtual como teste
@@ -59,10 +59,10 @@ public class SimulatedKalman : MonoBehaviour
 
     //double[,] qInicial =  { { 0.05, 0.05, 0 }, { 0.05, 0.05, 0 }, {0, 0, 0.05 } };
     //Matrix<double> Q;
-    Matrix<double> Q = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0);
+    Matrix<double> Q = Matrix<double>.Build.DenseDiagonal(3, 3, 1.85);
 
     //double[,] rInicial = { { 1.0, 0, 0 }, { 0, 1.0, 0 }, {0, 0, 1.0} }; //só para preencher o vetor
-    Matrix<double> R = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0);
+    Matrix<double> R = Matrix<double>.Build.DenseDiagonal(3,3, 1.0);
     //matriz identidade
     Matrix<double> I = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0);
     // Start is called before the first frame update
@@ -74,9 +74,7 @@ public class SimulatedKalman : MonoBehaviour
     }
 
     void CalculateKalmanFUsion()
-    {
-
-        //Debug.Log("Q = " + Q);
+    {        
         //1 e 2)
         eKant = eK;
         pKant = pK;
@@ -103,13 +101,13 @@ public class SimulatedKalman : MonoBehaviour
         //S = H * pKant * H.Transpose() + R;
 
         //9)
-        Kk = pkPrior * H.Transpose() * S.Inverse();
+        Kn = pkPrior * H.Transpose() * S.Inverse();
         //Kk = pKant * H.Transpose() + S.Inverse();
 
         //10)
-        eK = eOdon + (Kk * yK);
+        eK = eOdon + (Kn * yK);
         //11)
-        pK = (I - Kk * H) * pkPrior;
+        pK = (I - Kn * H) * pkPrior;
         //pK = (I - Kk * H) * pkPrior * ((I - Kk * H).Transpose()) + (Kk * R * Kk.Transpose());
 
         MoveRobot(eK, kalmanBot);
@@ -118,7 +116,7 @@ public class SimulatedKalman : MonoBehaviour
 
         Debug.Log("eCam = " + eCam);
         Debug.Log("eOdon = " + eOdon);
-        Debug.Log("KK = " + Kk);
+        Debug.Log("KK = " + Kn);
         Debug.Log("S = " + S);
         Debug.Log("Ek = " + eK);
     }

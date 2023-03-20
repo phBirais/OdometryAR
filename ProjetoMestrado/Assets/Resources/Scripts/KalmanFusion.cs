@@ -28,7 +28,7 @@ public class KalmanFusion : MonoBehaviour
 
     //covariancia estado estimado pelo kalman anterior
     Matrix<double> pKant = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0f);
-    Matrix<double> pK = Matrix<double>.Build.DenseDiagonal(3, 3, -0.025f);
+    Matrix<double> pK = Matrix<double>.Build.DenseDiagonal(3, 3, 0.05f);
 
     // estado de inovação
     public Vector<double> yK = Vector<double>.Build.Dense(3, 0);
@@ -59,7 +59,7 @@ public class KalmanFusion : MonoBehaviour
 
     //double[,] qInicial =  { { 0.05, 0.05, 0 }, { 0.05, 0.05, 0 }, {0, 0, 0.05 } };
     //Matrix<double> Q;
-    Matrix<double> Q = Matrix<double>.Build.DenseDiagonal(3, 3, 0.2);
+    Matrix<double> Q = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0);
 
     Matrix<double> R = Matrix<double>.Build.DenseDiagonal(3, 3, 1.0);
     //matriz identidade
@@ -91,40 +91,44 @@ public class KalmanFusion : MonoBehaviour
     void CalculateKalmanFUsion()
     {
 
-        Debug.Log("Q = " + Q);
+        //Debug.Log("Q = " + Q);
         //1 e 2)
         eKant = eK;
         pKant = pK;
         //3)
 
         //Utilizando dados robo real
-        /*
+        
         eOdon[0] = realBotOdometry.odometryState[0];
         eOdon[1] = realBotOdometry.odometryState[1];
         eOdon[2] = realBotOdometry.odometryState[2];
-        */
+        
         /*
         eOdon[0] = virtualBot.transform.position.x + Random.Range(-0.05f, 0.05f); //X da odometria
         eOdon[1] = virtualBot.transform.position.z; //y da odometria
         eOdon[2] = virtualBot.transform.eulerAngles.y * Mathf.Deg2Rad;//teta da odometria (em radianos)*/
 
-        eOdon[0] = eKant[0] + virtualBotSpeedController.forwardSpeed * Mathf.Cos((float)eKant[2]) * deltaT + Random.Range(-0.05f, 0.05f); 
-        eOdon[1] = eKant[1] + virtualBotSpeedController.forwardSpeed * Mathf.Sin((float)eKant[2]) * deltaT + Random.Range(-0.05f, 0.05f); 
+        /*
+        eOdon[0] = eKant[0] + virtualBotSpeedController.forwardSpeed * Mathf.Cos((float)eKant[2]) * deltaT + Random.Range(-0.02f, 0.02f); 
+        eOdon[1] = eKant[1] + virtualBotSpeedController.forwardSpeed * Mathf.Sin((float)eKant[2]) * deltaT + Random.Range(-0.02f, 0.02f); 
         eOdon[2] = eKant[2] + virtualBotSpeedController.angularSpeed * deltaT;
+        */
 
 
-       //4)
+       //4) // utilizando dados do robo virtual
+       /*
         eCam[0] = virtualBot.transform.position.x + Random.Range(-0.01f, 0.01f); //x da camera
         eCam[1] = virtualBot.transform.position.z + Random.Range(-0.01f, 0.01f);  //y da camera
         eCam[2] = virtualBot.transform.eulerAngles.y  * Mathf.Deg2Rad; //teta da camera (em radianos)
+       */
         
         
          // utilizando dados do robo real
-         /*
-        eCam[0] = realBot.transform.position.x + 0.05; //x da camera
-        eCam[1] = realBot.transform.position.z + 0.05; ;//y da camera
-        eCam[2] = realBot.transform.eulerAngles.y +0.5;//* Mathf.Deg2Rad); //teta da camera (em radianos)
-         */
+         
+        eCam[0] = realBot.transform.position.x; //x da camera
+        eCam[1] = realBot.transform.position.z;//y da camera
+        eCam[2] = realBot.transform.eulerAngles.y;//* Mathf.Deg2Rad); //teta da camera (em radianos)
+         
          
         //5)
         ePrior = eOdon;
@@ -138,7 +142,7 @@ public class KalmanFusion : MonoBehaviour
         S = H * pkPrior * H.Transpose() + R;
       
         //9)
-        Kk = pkPrior * H.Transpose() + S.Inverse();
+        Kk = pkPrior * H.Transpose() * S.Inverse();
        
         //10)
         eK = eOdon + (Kk * yK);
@@ -149,10 +153,10 @@ public class KalmanFusion : MonoBehaviour
         MoveRobot(eCam, eCamBot); 
         MoveRobot(eOdon, eOdonBot); 
 
-        Debug.Log("eCam = " + eCam);
+        //Debug.Log("eCam = " + eCam);
         //Debug.Log("eOdon = " + eOdon);
         //Debug.Log("yK = " + yK);
-        Debug.Log("Ek = " + eK);      
+        //Debug.Log("Ek = " + eK);      
     }
 
     public void MoveRobot(Vector<double> state, GameObject go)

@@ -15,7 +15,7 @@ public class RealBotOdometry : MonoBehaviour
 
     float cos_theta = 0, sin_theta = 0;
     float theta = 0;
-    float xAtual, xAnterior, yAtual, yAnterior, anguloAtual, anguloAnterior = 0;
+    float xAtual, xAnterior = -0.15f, yAtual, yAnterior, anguloAtual, anguloAnterior = 0;
 
     //valores do encoder lido
     float encoderD=0, encoderE=0, encoderDAnt=0, encoderEAnt=0;
@@ -67,34 +67,40 @@ public class RealBotOdometry : MonoBehaviour
 
             odometryState = new Vector3(xAtual, yAtual, theta);
 
-            theta = anguloAnterior + (omega * virtualBotSpeedController.deltaT);
+            theta = anguloAnterior + (-omega * virtualBotSpeedController.deltaT);
             forwardSpeed = v;
         }
     }
 
      float FowardSpeed(float[] encoderValues)
-    {
-        tempo = encoderValues[0];
+    {        
+        tempo = Time.time;
         encoderD = encoderValues[1];
         encoderE = encoderValues[2];
-       
-        //velocidade roda direita em rad/s
-        rightWheelSpeed = ((encoderD - encoderDAnt) / (tempo - tempoAnt))*1000; // diferença de pulsos / diferença de tempo * 1000
-        Debug.Log("R1  " + rightWheelSpeed);
-        rightWheelSpeed /= ppr; // divisao pelos pulsos por segundo para obter rotacoes por segundo
-        Debug.Log("R2  " + rightWheelSpeed);
-        rightWheelSpeed *= (2 * Mathf.PI); //convertendo para rad.s
-        Debug.Log("R3  " + rightWheelSpeed);
+        //Debug.Log("tempo:" + tempo);
+        //Debug.Log("tempo dif:" + (tempo - tempoAnt));
+        //Debug.Log("encoder:" + encoderD);
+        if (encoderD - encoderDAnt > 0 && encoderE - encoderEAnt > 0)
+        {
+            //velocidade roda direita em rad/s
+            rightWheelSpeed = ((encoderD - encoderDAnt) / (tempo - tempoAnt)); // diferença de pulsos / diferença de tempo
+            rightWheelSpeed /= ppr; // divisao pelos pulsos por segundo para obter rotacoes por segundo
+            rightWheelSpeed *= (2 * Mathf.PI); //convertendo para rad.s
+            Debug.Log("velocidade right  " + rightWheelSpeed);
 
-        //velocidade roda esquerda em rad/s
-        leftWheelSpeed = ((encoderE - encoderEAnt) / (tempo - tempoAnt)) * 1000;
-        leftWheelSpeed /= ppr;
-        leftWheelSpeed *= (2 * Mathf.PI);
+            //velocidade roda esquerda em rad/s
+            leftWheelSpeed = ((encoderE - encoderEAnt) / (tempo - tempoAnt));
+            leftWheelSpeed /= ppr;
+            leftWheelSpeed *= (2 * Mathf.PI);
+            Debug.Log("Velocidade esquerda  " + leftWheelSpeed);
 
-        float speed = ((leftWheelSpeed * wheelRadius) / 2) + ((rightWheelSpeed * wheelRadius) / 2);
-        tempo = tempoAnt;
-        encoderD = encoderDAnt;
-        encoderE = encoderEAnt;
+            tempoAnt = tempo;
+            encoderDAnt = encoderD;
+            encoderEAnt = encoderE;
+        }
+
+        float speed = ((leftWheelSpeed * wheelRadius) / 2) + ((rightWheelSpeed * wheelRadius) / 2);            
+
 
         return speed;
     }

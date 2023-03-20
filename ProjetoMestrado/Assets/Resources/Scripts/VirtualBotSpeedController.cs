@@ -77,7 +77,7 @@ public class VirtualBotSpeedController : MonoBehaviour
         anguloAnterior = 0;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (go && baseMarker)
         {

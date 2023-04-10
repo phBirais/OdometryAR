@@ -90,6 +90,7 @@ public class SimulatedKalman : MonoBehaviour
 
         //5)
         ePrior = eOdon;
+
         //6)
         pkPrior = A * pKant * A.Transpose() + Q;
 
@@ -102,10 +103,10 @@ public class SimulatedKalman : MonoBehaviour
 
         //9)
         Kn = pkPrior * H.Transpose() * S.Inverse();
-        //Kk = pKant * H.Transpose() + S.Inverse();
 
         //10)
         eK = eOdon + (Kn * yK);
+
         //11)
         pK = (I - Kn * H) * pkPrior;
         //pK = (I - Kk * H) * pkPrior * ((I - Kk * H).Transpose()) + (Kk * R * Kk.Transpose());

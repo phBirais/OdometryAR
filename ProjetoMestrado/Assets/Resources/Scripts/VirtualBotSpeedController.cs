@@ -23,6 +23,8 @@ public class VirtualBotSpeedController : MonoBehaviour
 
     float xAtual, xAnterior = -0.15f, yAtual, yAnterior, anguloAtual, anguloAnterior = 0;
 
+    bool status = false;
+
     Quaternion rotacaoInicial = Quaternion.identity;
 
     //variaveis publicas
@@ -54,12 +56,15 @@ public class VirtualBotSpeedController : MonoBehaviour
         leftWheelSpeed = ((float)(leftWheelSpeed / 9.5492965964254));
         rightWheelSpeed = ((float)(rightWheelSpeed / 9.5492965964254));
 
+        status = true;
+
         InvokeRepeating("Main", 0.1f, deltaT);
     }
 
     public void StopRobot()
     {
-        CancelInvoke();
+        //CancelInvoke();
+        status = false;
     }
 
     public void ResetRobot()
@@ -79,7 +84,7 @@ public class VirtualBotSpeedController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (go && baseMarker)
+        if (go.activeInHierarchy && baseMarker)
         {
             Vector3 difference = (go.transform.position - baseMarker.transform.position);
             distanceX = difference.x;
@@ -97,37 +102,30 @@ public class VirtualBotSpeedController : MonoBehaviour
     // Update is called once per frame
     void Main()
     {
-        //Debug.Log("xAtual: " + leftWheelSpeed);
-        //Debug.Log("yAtual: " + rightWheelSpeed);
+        if (status == true)
+        {
+            float v = -1 * FowardSpeed();
+            float omega = GetOmega();
+            xAtual = xAnterior + (v * cos_theta * deltaT);
+            yAtual = yAnterior + (v * sin_theta * deltaT);
+            cos_theta = Mathf.Cos(theta);
+            sin_theta = Mathf.Sin(theta);
 
-        float v = -1 * FowardSpeed();
-        float omega = GetOmega();
-        xAtual = xAnterior + (v * cos_theta * deltaT);
-        yAtual = yAnterior + (v * sin_theta * deltaT);
-        cos_theta = Mathf.Cos(theta);
-        sin_theta = Mathf.Sin(theta);
+            xAnterior = xAtual;
+            yAnterior = yAtual;
+            anguloAnterior = theta;
 
-        //Debug.Log("Theta: " + theta);
-        //Debug.Log("CosTheta: " + cos_theta);
-        //Debug.Log("SinTheta: " + sin_theta);
-        //Debug.Log("V: " + v);
-        
-        //Debug.Log("xAtual: " + xAtual);
-        //Debug.Log("yAtual: " + yAtual);
+            //movimentacao
+            if (go.activeInHierarchy)
+            {
+                go.transform.position = new Vector3(xAtual, 0, yAtual);
+                go.transform.Rotate(0, (-(omega * deltaT) * Mathf.Rad2Deg), 0);
+            }
 
-        xAnterior = xAtual;
-        yAnterior = yAtual;
-        anguloAnterior = theta;
-
-
-        //Debug.Log("anguloAnterior: " + (anguloAnterior * Mathf.Rad2Deg));
-        //movimentacao
-        go.transform.position = new Vector3(xAtual, 0, yAtual);
-        go.transform.Rotate(0, (-(omega * deltaT) * Mathf.Rad2Deg), 0);
-
-        theta = anguloAnterior + (omega * deltaT);
-        forwardSpeed =v;
-        angularSpeed =omega;
+            theta = anguloAnterior + (omega * deltaT);
+            forwardSpeed = v;
+            angularSpeed = omega;
+        }
     }
 
     float FowardSpeed()

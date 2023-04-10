@@ -101,11 +101,11 @@ public class UDPServer : MonoBehaviour
 
         //tranformar velocidade em pwm
         // RPM 0 - 475 --> PWM 0 - 1023
-        leftSpeed = (leftSpeed * 1023 / 350);
-        rightSpeed = (rightSpeed * 1023 / 350);
+        leftSpeed = (leftSpeed * 1023 / 420); //reta 365 //left 400 e right 375
+        rightSpeed = (rightSpeed * 1023 / 420);
 
-        Debug.Log("leftReal: " + leftSpeed);
-        Debug.Log("rightReal: " + rightSpeed);
+        //Debug.Log("leftReal: " + leftSpeed);
+        //Debug.Log("rightReal: " + rightSpeed);
 
         //mandar as velocidade para os robos em pwm ou porcentagem
 

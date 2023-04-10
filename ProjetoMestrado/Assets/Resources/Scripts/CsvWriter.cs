@@ -38,7 +38,7 @@ public class CsvWriter : MonoBehaviour
         realBotTw.Close();
 
         kalmanBotTw = new StreamWriter(kalmanBotFileName, false);
-        kalmanBotTw.WriteLine("Time; EkX; EodomX; EcamX; Ykx");
+        kalmanBotTw.WriteLine("Time; virtualBot X; VirtualBot Y; VirtualBot angle; EkX;Eky;EkAngle;EodomX;EodomY;Eodom angle; EcamX; EcamY; Ecam angle; Ykx;Yky; Yk angle");
         kalmanBotTw.Close();
 
 
@@ -75,7 +75,11 @@ public class CsvWriter : MonoBehaviour
            + ";" + robotController.robot.gameObject.transform.eulerAngles.y.ToString("F3") + ";" + udpServer.realBotValues[1] + ";"+ udpServer.realBotValues[2]);
         }
 
-        kalmanBotTw.WriteLine((Time.time - kalmanBotFirstTime).ToString("F3")+ ";" + (kalmanFusion.eK[0]).ToString("F3") + ";" + kalmanFusion.eOdon[0].ToString("F3") + ";" + kalmanFusion.eCam[0].ToString("F3") + ";" + kalmanFusion.yK[0].ToString("F3"));
+        kalmanBotTw.WriteLine((Time.time - kalmanBotFirstTime).ToString("F3")+ ";" + (virtualrobotController.posX).ToString("F3") + ";" + (virtualrobotController.posY).ToString("F3") + ";" + (virtualBot.gameObject.transform.eulerAngles.y).ToString("F3") + ";"
+            + (kalmanFusion.eK[0]).ToString("F3")  +";" + (kalmanFusion.eK[1]).ToString("F3")+ ";" + (kalmanFusion.eK[2]).ToString("F3")+ ";" 
+            + kalmanFusion.eOdon[0].ToString("F3") + ";" + kalmanFusion.eOdon[1].ToString("F3") + ";" + kalmanFusion.eOdon[2].ToString("F3") + ";"
+            + kalmanFusion.eCam[0].ToString("F3") + ";" + kalmanFusion.eCam[1].ToString("F3") + ";" + kalmanFusion.eCam[2].ToString("F3") + ";"
+            + kalmanFusion.yK[0].ToString("F3") + ";" + kalmanFusion.yK[1].ToString("F3") + ";" + kalmanFusion.yK[2].ToString("F3") + ";");
 
         virtualBotTw.Close();
         realBotTw.Close();

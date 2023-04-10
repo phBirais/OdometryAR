@@ -9,6 +9,7 @@ public class UI_Controller : MonoBehaviour
     public Text realdistanceValueX, realdistanceValueY, distanceValueEncod, distanceDiffValueY;
     public Text virtualdistanceValueX, virtualdistanceValueY;
     public Text kalmandistanceValueX, kalmandistanceValueY;
+    public Text eOdonDistanceValueX, eOdonDistanceValueY ;
 
     //private Text sliderRigthValue;
     //private Text sliderLeftValue;
@@ -31,17 +32,22 @@ public class UI_Controller : MonoBehaviour
     void Update()
     {
         //robo virtrual
-        var virtualBotDistX = virtualBotSpeedController.posX + 0.15;
-        var virtualBotDistY = virtualBotSpeedController.posY;
+        var virtualBotDistX = -1*(virtualBotSpeedController.posX + 0.15);
+        var virtualBotDistY = -1*virtualBotSpeedController.posY;
 
-        //robo real
-        var realBotDistX = robotController.distanceX+0.15;
-        var realBotDistY = robotController.distanceY;
+        //robo real ODOMETRIA
+        var realBotDistX = -1*(robotController.distanceX+0.15);
+        var realBotDistY = -1*robotController.distanceY;
+
+
+        //robo real camera
+        var eOdonBotDistX =  (kalmanFusion.eOdon[0]);
+        var eOdonBotDistY = -1* kalmanFusion.eOdon[1];
 
 
         //robo filtro de kalman
-        var kalmanBotDistX = kalmanFusion.eK[0] + 0.15;
-        var kalmanBotDistY = kalmanFusion.eK[1];
+        var kalmanBotDistX = -1*(kalmanFusion.eK[0] +0.15);
+        var kalmanBotDistY = -1*kalmanFusion.eK[1];
         
 
         //Incluindo valores nas caixas de texto
@@ -57,6 +63,9 @@ public class UI_Controller : MonoBehaviour
         //valor ponto filtro de kalman
         kalmandistanceValueX.text = kalmanBotDistX.ToString("F3");
         kalmandistanceValueY.text = kalmanBotDistY.ToString("F3");
+
+        eOdonDistanceValueX.text = eOdonBotDistX.ToString("F3");
+        eOdonDistanceValueY.text = eOdonBotDistY.ToString("F3");
 
         //valor de distancia percorrida pelos encoders
         distanceValueEncod.text = udpServer.distance.ToString("F3");

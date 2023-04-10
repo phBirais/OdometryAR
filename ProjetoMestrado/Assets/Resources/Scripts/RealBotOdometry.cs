@@ -61,6 +61,7 @@ public class RealBotOdometry : MonoBehaviour
             cos_theta = Mathf.Cos(theta);
             sin_theta = Mathf.Sin(theta);
 
+            //atualização dos valores Anteriores
             xAnterior = xAtual;
             yAnterior = yAtual;
             anguloAnterior = theta;
@@ -86,13 +87,13 @@ public class RealBotOdometry : MonoBehaviour
             rightWheelSpeed = ((encoderD - encoderDAnt) / (tempo - tempoAnt)); // diferença de pulsos / diferença de tempo
             rightWheelSpeed /= ppr; // divisao pelos pulsos por segundo para obter rotacoes por segundo
             rightWheelSpeed *= (2 * Mathf.PI); //convertendo para rad.s
-            Debug.Log("velocidade right  " + rightWheelSpeed);
+           // Debug.Log("velocidade right  " + rightWheelSpeed);
 
             //velocidade roda esquerda em rad/s
             leftWheelSpeed = ((encoderE - encoderEAnt) / (tempo - tempoAnt));
             leftWheelSpeed /= ppr;
             leftWheelSpeed *= (2 * Mathf.PI);
-            Debug.Log("Velocidade esquerda  " + leftWheelSpeed);
+           // Debug.Log("Velocidade esquerda  " + leftWheelSpeed);
 
             tempoAnt = tempo;
             encoderDAnt = encoderD;

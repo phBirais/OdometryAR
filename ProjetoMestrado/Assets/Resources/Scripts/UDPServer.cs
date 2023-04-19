@@ -110,8 +110,8 @@ public class UDPServer : MonoBehaviour
         //mandar as velocidade para os robos em pwm ou porcentagem
 
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port); //IP do esp32
-        //IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.201.227"), port); //IP do esp32 com celular roteando
+        //IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port); //IP do esp32
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.28.227"), port); //IP do esp32 com celular roteando
         //IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("start,"+leftSpeed+","+rightSpeed);
 
@@ -134,8 +134,8 @@ public class UDPServer : MonoBehaviour
     public void StopRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
-        //IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.201.227"), port);//IP celular roteando
+        //IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.28.227"), port);//IP celular roteando
         //IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("stop");
         gameStatus = false;
@@ -160,8 +160,8 @@ public class UDPServer : MonoBehaviour
     public void PauseRobot()
     {
         UdpClient Client = new UdpClient();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
-        //IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.201.227"), port); //IP celular roteando
+        //IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.18.57"), port);
+        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.28.227"), port); //IP celular roteando
         //IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, 44445);
         byte[] bytes = Encoding.ASCII.GetBytes("pause");
         gameStatus = false;
